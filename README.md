@@ -1,4 +1,4 @@
-# Malicious Behavior Detection using Windows Audit Logs
+# Malicious Behavior Detection using Windows Audit Logs, Part II
 
 This is the github page for the public release of a dataset of Windows Audit Logs and the associated publication.
 
@@ -10,14 +10,13 @@ __If you have any questions or issues, or something is not clear about our data 
 
 This project is a contininioution of the previous projected on behavior malware detection using audit log. The github for the previous project can be found [here](https://github.com/konstantinberlin/malware-windows-audit-log-detection).
 
-Similar to the previous 
-We investigated the utility of agentless detection of malicious endpoint behavior, using only the standard build-in Windows audit logging facility as our signal. We found that Windows audit logs, while emitting manageable sized data streams on the endpoints, provide enough information to allow robust detection of malicious behavior. Audit logs provide an effective, low-cost alternative to deploying additional expensive agent-based breach detection systems in many government and industrial settings, and can be used to detect, in our tests, 83% percent of malware samples with a 0.1% false positive rate. They can also supplement already existing host signature-based antivirus solutions, like Kaspersky, Symantec, and McAfee, detecting, in our testing environment, 78% of malware missed by those antivirus systems.
+Similar to the previous study, we continued to investigate the utility of agentless detection of malicious endpoint behavior, using only the standard build-in Windows audit logging facility as our signal. In the process of performing the study we collected a much larger and diverse set of audit logs, from sandboxed CuckooBox runs, as well as directly from our enterprise network.
+
+We would like to encourage research in the security critical area of behavior malware detection by releasing this (annonymized) dataset to the public. Along with the dataset, once availiable, we will post detection benchmarks (including the code), which we encourage the community to use as reference in their publications.
 
 ## Data and Anonymization 
 
-The anonymized version of the data that we used to compute our results can be found [here](https://www.dropbox.com/s/y6zbdgh3t9rl2cd/learn_final_r1.tar.gz?dl=0). The data has been anonomized in order to protect the privacy of the users from which it was collected.
-
-The goal of the anonymization was not only to protect privacy, but also allow the security community to supplement and reuse our data for their own needs. Therefore, part of our data has been anonymized such that if a new set of audit logs are added created by someone, it can be added to our dataset without duplicating feature names.
+The anonymized version of the data that we used to compute our results can be found [here](???). This data has been anonymized in order to protect the privacy of the users from which it was collected, but with the second goal to allow the security community to supplement and reuse our data for their own needs. The process by which this was done is described below.
 
 The following is the description of the anonymization steps
 
