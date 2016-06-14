@@ -1,13 +1,16 @@
 # Malicious Behavior Detection using Windows Audit Logs
 
-This is the github page for the AI-Sec 2015 publication "Malicious Behavior Detection using Windows Audit Logs" by Konstantin Berlin, David Slater, and Joshua Saxe. This work will be presented on __Friday October 16, 2015 at 2015 ACM Workshop on Artificial Intelligence and Security__, which is co-located with CCS.
+This is the github page for the public release of a dataset of Windows Audit Logs and the associated publication.
 
-The free pre-print of the publication can be found at http://arxiv.org/abs/1506.04200.
+The free pre-print of the publication will be located at http://arxiv.org, once it is availiable. 
 
 __If you have any questions or issues, or something is not clear about our data or scripts, please report them, so we can fix them as soon as possible.__
 
 ###Synoposis
 
+This project is a contininioution of the previous projected on behavior malware detection using audit log. The github for the previous project can be found [here](https://github.com/konstantinberlin/malware-windows-audit-log-detection).
+
+Similar to the previous 
 We investigated the utility of agentless detection of malicious endpoint behavior, using only the standard build-in Windows audit logging facility as our signal. We found that Windows audit logs, while emitting manageable sized data streams on the endpoints, provide enough information to allow robust detection of malicious behavior. Audit logs provide an effective, low-cost alternative to deploying additional expensive agent-based breach detection systems in many government and industrial settings, and can be used to detect, in our tests, 83% percent of malware samples with a 0.1% false positive rate. They can also supplement already existing host signature-based antivirus solutions, like Kaspersky, Symantec, and McAfee, detecting, in our testing environment, 78% of malware missed by those antivirus systems.
 
 ## Data and Anonymization 
@@ -87,5 +90,5 @@ To create Figure 3 from the manuscript, type:
 
 ## Copyright and License
 
-Code, documentation, and data copyright 2014-2015 Invincea Labs, LLC. Release is governed by [Apache 2.0](LICENSE.txt)  license.
+Code, documentation, and data copyright 2015-2016 Invincea Labs, LLC. Release is governed by [Apache 2.0](LICENSE.txt)  license.
 
