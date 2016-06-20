@@ -16,14 +16,14 @@ We would like to encourage research in the security critical area of behavior ma
 
 ## Data and Anonymization 
 
-The anonymized version of the data that we used to compute our results can be found [here](???). This data has been anonymized in order to protect the privacy of the users from which it was collected, but with the second goal to allow the security community to supplement and reuse our data for their own needs. The process by which this was done is described below.
+The anonymized version of the data that we used to compute our results will be found [here (__link currently broken__) ](???). This data will be anonymized in order to protect the privacy of the users from which it was collected, but with the second goal to allow the security community to supplement and reuse our data for their own needs. The process by which this was done is described below.
 
-The following is the description of the anonymization steps
+The following is the description of the anonymization steps:
 
-1. Transform all the entries using the regex transformations.
-2. Observe all the paths (including directory and name) and the subpaths for files, process names, and registry entries, for all the sandbox derived Windows audit logs. Put them in a bag of public paths called __P__.
+1. Transform all the entries using the regex transformations defined in [].
+2. Observe all the paths (including directory and name) and the subpaths for files, process names, and registry entries, for all the CuckooBox derived Windows audit logs (ex., c:\, c:\windows, c:\window\system32, etc). Put them in a bag of public paths called __P__.
 3. Encrypt the file/registry/process names in pieces.
-    * Do not encrypt any logs from the sandbox runs.
+    * Do not encrypt any logs from the CuckooBox runs.
     * For each audit log entry in the enterprise data, see if all or parts of its path is in __P__. Encrypt each directory/registry using its name, if the full path of the directory/registry is not in __P__, otherwise leave unencrypted. The encrypted name is the text `sha1_` followed by the sha1 of the directory/registry name. For files we leave the extension exposed, and only hash the name. Ex. `[windows]\system32\fake_dir\fake.dll` will be encrypted as `[windows]\system32\sha1_<hash of "fake_dir">\sha1_<hash of "fake">.dll`.
     * For sensitive files types, like documents, slides, text, etc., we salt the filenames before hashing.
 
@@ -35,57 +35,24 @@ The regex transformations that we use to generate our feature labels are located
 
 The following is the data that we used for our analysis. The file format is specified in Section [File Formats](#ff).
 
-#### Root directory
+#### Overview
 
 The root directory contains the following:
 
-* `inter` - directory containing the raw and intermediate file representation of the audit logs (see below)
-* `pace_classification.txt` - label classification scores for the cuckoo box data (<0 means unknown label, 0-1 are virus total scores, >1 means malware due to original source of file)
-* `pace_column_labels_anon.txt` - string names of the features
-* `pace_row_labels_anon.txt` - list of sha1 of the binary files that were ran through CuckooBox. They are in same order as  `pace_classification.txt`, and their row number directly maps into `pace_feature_matrix.txt` row numbers
-* `pace_created_labels.txt` - time from epoch when the file was created based on the compile time stamp. If not detected, file created time stamp
-* `pace_feature_matrix.txt` - the feature matrix in the format described on the bottom
-* `pace_malware_kaspersky_labels.txt` - Kaspersky labels for the CuckooBox data
-* `pace_malware_mcafee_labels.txt` - Mcafee labels for the CuckooBox data
-* `pace_malware_symantec_labels.txt` - Symantec labels for the CuckooBox data
+* `???` - the RocksDB file containing the features data
+* `???` - the metadata Sqlite database
 
-These are same type of files as described above but for our enterprise dataset (3 users) and splunk dataset (1 user):
-* `pace_enterprise_feature_matrix.txt`
-* `pace_enterprise_row_labels_anon.txt`
-* `pace_splunk_feature_matrix.txt`
-* `pace_splunk_row_labels_anon.txt`
-
-#### The `inter` Directory
+#### The SqlLite Database
 
 The `inter` directory contains the intermediate files that we used to form our n-grams. Their names match the *\_row_labels.txt content.
 
-* `*.log` - the JSON formatted intermediate file format. This was the file that we used to create n-grams, and has abstractions of paths and file deletions. The ignored entries, as given by the JSON entry `ignored`, are removed before forming the n-grams.
+#### The RocksDB ML features
 
-##### <a name="ff">File Formats</a>
-The matrix format written in text is following:
-* First line: `<#number of rows> <#number of columns> <#number of non-zero elements in the matrix>`
-* This is followed by a list of non-zero entries: `<row> <column> <value>`
+__More to come__
 
 ## Build
 
-In order to reproduce the plots from the paper using our MATLAB scripts you will you will need MATLAB 2014 or higher, with Statistics and Machine Learning Toolbox. In addition, you will need the [Glmnet](http://web.stanford.edu/~hastie/glmnet_matlab/) MATLAB package in your MATLAB path.
-
-To load the data from disk into MATLAB, type:
-
-```
-[A, y, names, virus_kasp, virus_mcafee, virus_symantec, column_labels, t_created, cuckoo_idx, splunk_idx] = read_data(<location of unzipped data txt files>);
-```
-To create Figure 1 from the manuscript, type:
-
-`make_fig1(A, y, column_labels, virus_kasp, cuckoo_idx, t_created);`
-
-To create Figure 2 from the manuscript, type:
-
-`make_fig2(A, y, cuckoo_idx, splunk_idx, t_created, virus_kasp);`
-
-To create Figure 3 from the manuscript, type:
-
-`make_fig3(A, y, cuckoo_idx, splunk_idx, virus_kasp, virus_mcafee, virus_symantec, t_created);`
+__More to come___
 
 ## Copyright and License
 
