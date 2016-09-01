@@ -39,8 +39,11 @@ The following is the data that we used for our analysis. The file format is spec
 
 The root directory contains the following:
 
-* `???` - the RocksDB file containing the features data
-* `???` - the metadata Sqlite database
+* `auditlog_meta.db` - the metadata Sqlite3 database containing labels and family names for the audit logs.
+* `auditlog_matrix_rocksdb` - the RocksDB file containing the 3-gram features for each log. Stored as sparse binary double array, in (index,value) touples.
+* `auditlog_features_rocksdb` - the RocksDB file containing the 3-gram feature names, as used in the touple index above.
+* `auditlog_json_rocksdb` - the JSON formatted and zlib compressed "raw" log that was used to generated all the data.
+* `auditlog_json_rocksdb` - the JSON formatted and zlib compressed "raw" log that was used to generated all the data.
 
 #### The SqlLite Database
 
