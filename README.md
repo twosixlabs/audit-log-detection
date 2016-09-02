@@ -60,8 +60,14 @@ def matrix_load_rocksdb(rocks_db, batch_idx, names_all):
 
     return A
 ```
-* `auditlog_features_rocksdb` - the RocksDB file containing the 3-gram feature names, as used in the touple index above.
-
+* `auditlog_features_rocksdb` - the RocksDB file containing the 3-gram feature names, as used in the touple index above. The code to print the features names from the file is given below:
+```python
+   db = rocksdb.DB(os.path.join(path,'auditlog_features_rocksdb'), rocksdb.Options(create_if_missing=False), read_only=True)
+   it = db.itervalues()
+   it.seek_to_first()
+   for name in it:
+      features.append(name)
+```
 * `auditlog_json_rocksdb` - the JSON formatted and zlib compressed "raw" log that was used to generated all the data. Example Python code to read and print one entry is below:
 ```python
    #example code to read one entry
