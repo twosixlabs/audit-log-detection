@@ -40,22 +40,39 @@ The following is the data that we used for our analysis. The file format is spec
 The root directory contains the following:
 
 * `auditlog_meta.db` - the metadata Sqlite3 database containing labels and family names for the audit logs.
-* `auditlog_matrix_rocksdb` - the RocksDB file containing the 3-gram features for each log. Stored as sparse binary double array, in (index,value) touples.
+* `auditlog_matrix_rocksdb` - the RocksDB file containing the 3-gram features for each log. Stored as sparse binary double array, in (index,value) touples. Below is example Python code that loads the feature matrix from this file assuming a list of log names `names_all`.
+```python
+def matrix_load_rocksdb(rocks_db, batch_idx, names_all):
+
+    for i in xrange(0, len(batch_idx), 1):
+        
+        #get the files
+        local_names = [names_all[x] for x in batch_idx[i:(i+1)]]
+        
+        entry_vals = rocks_db.multi_get(local_names)
+        
+        for name in local_names:
+            val = entry_vals[name]
+            vals = np.array(struct.unpack(">{0}d".format(int(len(val)/8)), val))
+            
+            #append to storage
+            A.append(vals)
+
+    return A
+```
 * `auditlog_features_rocksdb` - the RocksDB file containing the 3-gram feature names, as used in the touple index above.
-* `auditlog_json_rocksdb` - the JSON formatted and zlib compressed "raw" log that was used to generated all the data.
-* `auditlog_json_rocksdb` - the JSON formatted and zlib compressed "raw" log that was used to generated all the data.
 
-#### The SqlLite Database
-
-The `inter` directory contains the intermediate files that we used to form our n-grams. Their names match the *\_row_labels.txt content.
-
-#### The RocksDB ML features
-
-__More to come__
-
-## Build
-
-__More to come___
+* `auditlog_json_rocksdb` - the JSON formatted and zlib compressed "raw" log that was used to generated all the data. Example Python code to read and print one entry is below:
+```python
+   #example code to read one entry
+   db = rocksdb.DB(os.path.join(path,'auditlog_json_rocksdb'), rocksdb.Options(create_if_missing=False), read_only=True)
+   it = db.iteritems()
+   it.seek_to_first()
+   for name,v in it:
+      v = zlib.decompress(v, 16+zlib.MAX_WBITS)
+      print name, v
+      break  
+```
 
 ## Copyright and License
 
