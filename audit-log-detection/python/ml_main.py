@@ -326,10 +326,10 @@ def run(input_dir, results_dir, model = "full", epoch=100, size=-1, cv_folds = 2
     modelRF = RandomForestClassifier(n_estimators=128, n_jobs=-1, verbose=True,bootstrap=True,oob_score=False,min_samples_leaf=3, class_weight='balanced');
     modelLR = LogisticRegressionCV(penalty='l1',solver='liblinear', Cs=np.logspace(-3,2, 20), verbose=1, n_jobs=-1, class_weight='balanced', cv=10, scoring='log_loss', max_iter=200)
         
-    modelConv =     AuditConv(feature_counter, class_weight='balanced', train_batch_size=64, optimizer='adam', vocab_size=voc_size+1, verbose=1, nb_epoch=epoch, memory_batch_size=1024, callbacks=None)
+    modelConv =     AuditConv(feature_counter, class_weight='balanced', batch_size=64, optimizer='adam', vocab_size=voc_size+1, verbose=1, nb_epoch=epoch, memory_batch_size=64, callbacks=None)
 
     #the rnn model is experimental
-    modelRNN =       AuditRNN(feature_counter, class_weight='balanced', train_batch_size=64, optimizer='adam', vocab_size=voc_size+1, verbose=1, nb_epoch=epoch, memory_batch_size=1024, callbacks=None)
+    modelRNN =       AuditRNN(feature_counter, class_weight='balanced', batch_size=64, optimizer='adam', vocab_size=voc_size+1, verbose=1, nb_epoch=epoch, memory_batch_size=64, callbacks=None)
 
     final_model_ngram_lr = modelLR
     final_model_ngram = modelRF
