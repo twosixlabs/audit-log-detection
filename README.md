@@ -20,26 +20,38 @@ The anonymized version of the data that we used to compute our results will be f
 
 The following is the description of the anonymization steps:
 
-1. Transform all the entries using the regex transformations defined in [].
+1. Transform all the entries using the regex transformations defined in [Regex Transformations](#regex).
 2. Observe all the paths (including directory and name) and the subpaths for files, process names, and registry entries, for all the CuckooBox derived Windows audit logs (ex., c:\, c:\windows, c:\window\system32, etc). Put them in a bag of public paths called __P__.
 3. Encrypt the file/registry/process names in pieces.
     * Do not encrypt any logs from the CuckooBox runs.
     * For each audit log entry in the enterprise data, see if all or parts of its path is in __P__. Encrypt each directory/registry using its name, if the full path of the directory/registry is not in __P__, otherwise leave unencrypted. The encrypted name is the text `sha1_` followed by the sha1 of the directory/registry name. For files we leave the extension exposed, and only hash the name. Ex. `[windows]\system32\fake_dir\fake.dll` will be encrypted as `[windows]\system32\sha1_<hash of "fake_dir">\sha1_<hash of "fake">.dll`.
     * For sensitive files types, like documents, slides, text, etc., we salt the filenames before hashing.
 
-### Regex Transformations
+### Regex Transformations <a id="regex"></a>
 
-The regex transformations that we use to generate our feature labels are located in the [regex file](regex.txt). The regex expressions must be executed in order listed to reproduce our results.
+The regex transformations that we use to generate our feature labels are located in the [regex file](regex.txt). The regex statements must be executed in order listed to reproduce our results.
 
-### Data Content
-
-The following is the data that we used for our analysis. The file format is specified in Section [File Formats](#ff).
-
-#### Overview
+#### Data Content
 
 The root directory contains the following:
 
-* `auditlog_meta.db` - the metadata Sqlite3 database containing labels and family names for the audit logs.
+* `auditlog_meta.db` - the metadata Sqlite3 database containing labels and family names for the audit logs. Below is an example for how to extract the information from the metadata:
+```python
+   import sqlite3
+   conn = sqlite3.connect('auditlog_meta.db');
+    
+   c = conn.cursor()
+   names = []
+   vt_score = []
+   source = []
+   time_seen = []
+   for row in c.execute('SELECT name, vt_score, source, best_time_first_seen FROM samples'):
+      name = row[0]
+      names.append(name)
+      vt_score.append(row[1])
+      source.append(row[2])
+      time_seen.append(row[3])
+```
 * `auditlog_matrix_rocksdb` - the RocksDB file containing the 3-gram features for each log. Stored as sparse binary double array, in (index,value) touples. Below is example Python code that loads the feature matrix from this file assuming a list of log names `names_all`.
 ```python
 def matrix_load_rocksdb(rocks_db, batch_idx, names_all):
@@ -62,7 +74,9 @@ def matrix_load_rocksdb(rocks_db, batch_idx, names_all):
 ```
 * `auditlog_features_rocksdb` - the RocksDB file containing the 3-gram feature names, as used in the touple index above. The code to print the features names from the file is given below:
 ```python
-   db = rocksdb.DB(os.path.join(path,'auditlog_features_rocksdb'), rocksdb.Options(create_if_missing=False), read_only=True)
+   import rocksdb
+
+   db = rocksdb.DB('auditlog_features_rocksdb', rocksdb.Options(create_if_missing=False), read_only=True)
    it = db.itervalues()
    it.seek_to_first()
    for name in it:
@@ -70,8 +84,10 @@ def matrix_load_rocksdb(rocks_db, batch_idx, names_all):
 ```
 * `auditlog_json_rocksdb` - the JSON formatted and zlib compressed "raw" log that was used to generated all the data. Example Python code to read and print one entry is below:
 ```python
+   import rocksdb
+
    #example code to read one entry
-   db = rocksdb.DB(os.path.join(path,'auditlog_json_rocksdb'), rocksdb.Options(create_if_missing=False), read_only=True)
+   db = rocksdb.DB('auditlog_json_rocksdb', rocksdb.Options(create_if_missing=False), read_only=True)
    it = db.iteritems()
    it.seek_to_first()
    for name,v in it:
