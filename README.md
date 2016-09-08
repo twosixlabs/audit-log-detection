@@ -14,9 +14,19 @@ Similar to the previous study, we continued to investigate the utility of agentl
 
 We would like to encourage research in the security critical area of behavior malware detection by releasing this (annonymized) dataset to the public. Along with the dataset, once availiable, we will post detection benchmarks (including the code), which we encourage the community to use as reference in their publications.
 
-## Data and Anonymization 
+## Data Preprocessing
 
-The anonymized version of the data that we used to compute our results will be found [here (__link currently broken__) ](???). This data will be anonymized in order to protect the privacy of the users from which it was collected, but with the second goal to allow the security community to supplement and reuse our data for their own needs. The process by which this was done is described below.
+The data preprocessing consists of three parts. First, the transformation of the original Windows Audit logs collected in CuckooBox and from a Windows domain server into identical JSON format. This was done to allow simple access to the data attributes, as well to allow easier normalization of file paths and anonymization of private data.
+
+Second, the CuckooBox data was filtered to remove CuckooBox artificats (to the best of our abilities) from the data, such that the two datasets can be combined together. This process is described [Removal of Artifacts](#artifacts).
+
+Finally, the file path and registry information in the enterprise dataset has been annonymized, such that private path information is either encrypted (such as user name), or completely removed from the data. This processes is described in more detail in [Anonymization](#annon).
+
+The resoluting anonymized data will be found [here (__link currently broken__) ](???). 
+
+### Removal of Artifacts <a id="artifacts"></a>
+
+### Anonymization <a id="annon"></a>
 
 The following is the description of the anonymization steps:
 
@@ -31,7 +41,7 @@ The following is the description of the anonymization steps:
 
 The regex transformations that we use to generate our feature labels are located in the [regex file](regex.txt). The regex statements must be executed in order listed to reproduce our results.
 
-#### Data Content
+## Data Format
 
 The root directory contains the following:
 
@@ -95,6 +105,8 @@ def matrix_load_rocksdb(rocks_db, batch_idx, names_all):
       print name, v
       break  
 ```
+
+## Results
 
 ## Copyright and License
 
